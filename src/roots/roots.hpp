@@ -8,8 +8,38 @@
  */
 bool bisection(std::function<double(double)> f,
                double a, double b,
-               double *root);
-
+               double *root){
+    double fa = f(a);
+    double fb = f(b);
+    double c=0;
+    bool apos = false , bpos = false;
+    int iterations = trunc(1.5*log2(abs(b-a)/(1e-6)));
+    if (abs(fa)<1e-6){
+        *root = a;
+        return true;
+    }
+    if ((abs(fb)<1e-6)){
+        *root = b;
+        return true;
+    }
+    
+    for (int i = 0; i<=iterations;i++){
+        fa = f(a),fb = f(b);
+        c = (a+b)/2;
+        if (abs(f(c))<1e-6){
+            *root = c;
+            return true;
+        }
+        if (f(a) * f(c) > 0) {
+        a = c;
+        } else {
+        b = c;
+        }
+    }
+    return false;
+        
+    }
+    
 /* Tries to find a zero crossing in f() in the interval [a,b] with the
  * false positive / regula falsi method
  * Returns true if a root is found. The crossing is stored in root.
@@ -19,7 +49,37 @@ bool bisection(std::function<double(double)> f,
  */
 bool regula_falsi(std::function<double(double)> f,
                   double a, double b,
-                  double *root);
+                  double *root){
+    double fa = f(a);
+    double fb = f(b);
+    double c=0;
+    bool apos = false , bpos = false;
+    int iterations = trunc(1.5*log2(abs(b-a)/(1e-6)));
+    if (abs(fa)<1e-6){
+        *root = a;
+        return true;
+    }
+    if ((abs(fb)<1e-6)){
+        *root = b;
+        return true;
+    }
+    
+    for (int i = 0; i<=iterations;i++){
+        fa = f(a),fb = f(b);
+        c = a-(fa*(b-a)/(fb-fa));
+        if (abs(f(c))<1e-6){
+            *root = c;
+            return true;
+        }
+        if (f(a) * f(c) > 0) {
+        a = c;
+        } else {
+        b = c;
+        }
+    }
+    return false;
+        
+    }
 
 /* Tries to find a zero crossing in f() in the interval [a,b] with
  * the netwon-raphson method, given a function that computes the
@@ -31,7 +91,35 @@ bool regula_falsi(std::function<double(double)> f,
 bool newton_raphson(std::function<double(double)> f,
                     std::function<double(double)> g,
                     double a, double b, double c,
-                    double *root);
+                    double *root){
+    if (abs(f(a))<1e-6){
+        *root = a;
+        return true;
+    }
+    else if ((abs(f(b))<1e-6)){
+        *root = b;
+        return true;
+    }
+    double x_n =c;
+    double x_np1;
+    for(int i=0;i<10000;i++){
+        if (x_n < a || x_n > b) {
+            break;
+        }
+        if (abs(f(x_n))<1e-6){
+            *root = x_n;
+            return true;
+        }
+        if(g(x_n) ==0){
+            break;
+        }
+        
+        x_np1 = x_n -(f(x_n)/g(x_n));
+        x_n= x_np1;
+    }
+    return false;
+    
+                    }
 
 /* Tries to find a zero crossing in f() in the interval [a,b] with
  * the secant method, given a starting guess c.
@@ -41,4 +129,30 @@ bool newton_raphson(std::function<double(double)> f,
  */
 bool secant(std::function<double(double)> f,
             double a, double b, double c,
-            double *root);
+            double *root){
+    if (abs(f(a))<1e-6){
+        *root = a;
+        return true;
+    }
+    else if ((abs(f(b))<1e-6)){
+        *root = b;
+        return true;
+    }
+    double x_nm1 = c;
+    double x_n =d;
+    double x_np1;
+    for(int i=0;i<10000;i++){
+        if (x_n < a || x_n > b) {
+            break;
+        }
+        if (abs(f(x_n))<1e-6){
+            *root = x_n;
+            return true;
+        }
+        }
+        
+        x_np1 = x_n -(f(x_n)*(x_n-x_nm1)/(f(x_n)-f(x_nm1)));
+        x_n= x_np1;
+    
+    return false;
+            }

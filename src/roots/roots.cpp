@@ -109,7 +109,7 @@ bool newton_raphson(std::function<double(double)> f,
     }
     double x_n =c;
     double x_np1;
-    for(int i=0;i<10000;i++){
+    for(int i=0;i<1e6;i++){
         if (x_n < a || x_n > b) {
             break;
         }
@@ -148,7 +148,7 @@ bool secant(std::function<double(double)> f,
     double x_nm1 = c;
     double x_n = c + 1e-6;
     double x_np1;
-    for(int i=0;i<10000;i++){
+    for(int i=0;i<1e6;i++){
         if (x_n < a || x_n > b) {
             break;
         }
